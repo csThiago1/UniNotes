@@ -1,6 +1,8 @@
 from flask import render_template, request, redirect, url_for, session, flash, send_from_directory
 from uninotes import app, db
 from models import Notes, Users
+from helpers import image_recover
+
 @app.route('/')
 def index():
     note_list = Notes.query.order_by(Notes.note_id)
@@ -32,7 +34,8 @@ def edit(note_id):
     if'logged_user' not in session or session['logged_user'] is None:
         return redirect(url_for('login', proxima=url_for('edit', id=note_id)))
     note = Notes.query.filter_by(note_id=note_id).first()
-    return render_template('edit.html', title='Editando Nota', note=note)
+    note_cover = image_recover(note_id)
+    return render_template('edit.html', title='Editando Nota', note=note, note_cover=note_cover)
 
 @app.route('/update', methods=['POST',])
 def update():
@@ -42,6 +45,10 @@ def update():
 
     db.session.add(note)
     db.session.commit()
+
+    cover = request.files['cover']
+    upload_path = app.config['UPLOAD_PATH']
+    cover.save(f'{upload_path}/cover{note_id}.jpg')
 
     return redirect(url_for('index'))
 
