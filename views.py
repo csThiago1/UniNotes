@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, session, flash
+from flask import render_template, request, redirect, url_for, session, flash, send_from_directory
 from uninotes import app, db
 from models import Notes, Users
 @app.route('/')
@@ -79,3 +79,7 @@ def logout():
     session['logged_user', None]
     flash('Logout bem sucedido!')
     return redirect(url_for('index'))
+
+@app.route('/uploads/<filename>')
+def image(filename):
+    return send_from_directory('uploads', filename)
