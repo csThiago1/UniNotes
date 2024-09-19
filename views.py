@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, url_for, session, flash, send_from_directory
 from uninotes import app, db
 from models import Notes, Users
-from helpers import image_recover
+from helpers import image_recover, image_delete
+import time
 
 @app.route('/')
 def index():
@@ -25,7 +26,8 @@ def create():
 
     cover = request.files['cover']
     upload_path = app.config['UPLOAD_PATH']
-    cover.save(f'{upload_path}/cover{new_note.note_id}.jpg')
+    timestamp = time.time()
+    cover.save(f'{upload_path}/cover{new_note.note_id}-{timestamp}.jpg')
 
     return redirect(url_for('index'))
 
@@ -48,7 +50,9 @@ def update():
 
     cover = request.files['cover']
     upload_path = app.config['UPLOAD_PATH']
-    cover.save(f'{upload_path}/cover{note_id}.jpg')
+    timestamp = time.time()
+    image_delete(note.note_id)
+    cover.save(f'{upload_path}/cover{note.note_id}-{timestamp}.jpg')
 
     return redirect(url_for('index'))
 
