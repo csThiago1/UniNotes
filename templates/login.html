@@ -22,9 +22,22 @@
         <h1>Faça seu login</h1>
         <form method="POST" action="{{ url_for('authenticate') }}">
             <input type="hidden" name="proxima" value="{{ proxima or url_for('index') }}">
-            <p><label>Nome de usuário:</label> <input class="form-control" type="text" name="nickname" required></p>
-            <p><label>Senha:</label> <input class="form-control" type="password" name="user_password" required></p>
-            <p><button class="btn btn-primary" type="submit">Entrar</button></p>
+
+            {{ form.csrf_token }}
+
+            <div class="form-group">
+                {{ form.user_id.label(class="form-label") }}
+                {{ form.user_id(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control") }}
+            </div>
+
+            <div>
+                {{ form.login(class="btn btn-primary") }}
+            </div>
         </form>
     </div>
 </body>

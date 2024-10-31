@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniNotes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-$END$
+    <div id="app">
+        <div id="sidebar">
+            <div id="logo" onclick="toggleSidebar()">
+                <i class="fa-solid fa-underline" style="color: #cd440a;"></i>
+            </div>
+
+            <div id="username">
+                <i class="fa-solid fa-user"></i> {{ user.nickname }}
+            </div>
+
+            <div id="color-picker">
+                <button class="color-button" style="background-color: #ffeb3b;" onclick="createNote('#ffeb3b')"></button>
+                <button class="color-button" style="background-color: #ff5722;" onclick="createNote('#ff5722')"></button>
+                <button class="color-button" style="background-color: #4caf50;" onclick="createNote('#4caf50')"></button>
+                <button class="color-button" style="background-color: #2196f3;" onclick="createNote('#2196f3')"></button>
+                <button class="color-button" style="background-color: #9c27b0;" onclick="createNote('#9c27b0')"></button>
+            </div>
+
+            <div id="logout">
+                <button onclick="logout()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <div id="main">
+            <div id="notes-container">
+                {% for note in notes %}
+                <div class="note" style="background-color: {{ note.color }};">
+                    <textarea readonly>{{ note.content }}</textarea>
+                    <div class="icons">
+                        <span class="icon" onclick="editNote({{ note.note_id }}, this)">✏️</span>
+                        <span class="icon" onclick="deleteNote({{ note.note_id }})">🗑️</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>
